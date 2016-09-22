@@ -2,10 +2,12 @@ from collections import deque
 
 
 class Brainfuck:
-    def __init__(self, s):
-        self.cursor = 0
-        self.pointer = 0
-        self.buffer = deque([0])
+    def __init__(self, s=''):
+        self.cursor = None
+        self.pointer = None
+        self.buffer = None
+
+        self._reset()
 
         self.s = s
 
@@ -19,8 +21,19 @@ class Brainfuck:
             '[': self.lbrack,
             ']': self.rbrack
         }
+        
+        if s:
+            self._execute()
+    
+    def _reset(self):
+        self.cursor = 0
+        self.pointer = 0
+        self.buffer = deque([0])
 
-        self.execute()
+    def __call__(self, s):
+        self._reset(self)
+        self.s = s
+        self._execute()
 
     def langle(self):
         if self.pointer > 0:
@@ -70,7 +83,7 @@ class Brainfuck:
         self.cursor += 1  # maybe?
         return ''
 
-    def execute(self):
+    def _execute(self):
         output = ''
         while self.cursor < len(self.s):
             output += self.fns[s[self.cursor]]()
